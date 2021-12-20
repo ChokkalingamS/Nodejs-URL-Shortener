@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid';
 import { client } from './index.js';
+import { ObjectId } from "mongodb";
 
 function createData(urlData) {
     return client.db('movielist').collection('Url-Shortener').insertOne(urlData);
@@ -17,5 +18,8 @@ function urlGenereator() {
     return nanoid();
 }
 
-
-export{findUrl, urlGenereator, createData,updateLog }
+function deleteUrl(id)
+{
+    return client.db('movielist').collection('Url-Shortener').deleteOne({_id:ObjectId(id)});
+}
+export{findUrl, urlGenereator, createData,updateLog,deleteUrl}

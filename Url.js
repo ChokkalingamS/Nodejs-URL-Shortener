@@ -1,5 +1,5 @@
 import validUrl from 'valid-url';
-import { findUrl, urlGenereator, createData,updateLog } from './UrlDB.js';
+import { findUrl, urlGenereator, createData,updateLog,deleteUrl } from './UrlDB.js';
 import { Base_URL} from './index.js';
 import express from 'express'
 
@@ -82,6 +82,19 @@ router.route('/:url')
 });
 
 
-
+// Delete
+router.route('/deleteurl/:id')
+.delete(async(request,response)=>{
+    const {id}=request.params;
+    console.log(id);
+    console.log(request.params);
+    const delUrl = await deleteUrl(id);
+    const {deletedCount}= await delUrl
+    if(deletedCount)
+    {
+       return response.send({Msg:'URL Deleted'})
+    }
+    return response.status(502).send({Msg:'Error Occurred'})
+})
 
 export const urlRouter=router;
