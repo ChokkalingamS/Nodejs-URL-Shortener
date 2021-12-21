@@ -29,7 +29,7 @@ router.route('/signup')
         $or: [{ Username: { $eq: Username } }, { Mailid: { $eq: Mailid } }],
     }
 
-    console.log(request.body);
+    // console.log(request.body);
     const check = await getUser(userData);
     console.log(check);
     if(check)
@@ -51,7 +51,17 @@ router.route('/signup')
     const storeToken=await updateUser([{_id:_id},{$set:{token:token}}])
     // console.log(storeToken);
     const link=`http://localhost:1000/users/twostepverification/${token}`
-    const mail=Mail(link,Mailid,response)
+
+    const message=(`<h3>Greetings ${Firstname} !!!</h3>
+    <p>Welcome to the world of URL Shortener</p>
+    <p>Using our services you can Simplify your links, customize &amp; manage them at free of cost</p>
+    <a href=${link}>Click the link to complete two step verification</a>
+    <p>Two step verification is mandatory to login</p>
+    <p>Regards,</p>
+    <p>URL Shortener Team</p>`)
+    console.log(message);
+
+    const mail=Mail(Mailid,response,message)
     // console.log(mail);
     // if(!mail)
     // {
@@ -133,14 +143,25 @@ router.route('/forgotpassword')
     {
         return response.status(400).send('Email does not exist')
     }
-    const {_id,Password}=await check
-    // console.log(_id,Password);
+    const {_id,Password,Firstname,Status}=await check
+    if(Status==="Inactive")
+    {
+        return response.status(400).send("Your Account is Inactive")
+    }
     const token=jwt.sign({id:_id},process.env.key)
     const update=await updateUser([{_id},{$set:{Password:token}}])
     // console.log(update);
     const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
-    Mail(link,Mailid)
-    response.send(' Mail Sent ')
+
+    const message=(`<h3>Greetings ${Firstname} !!!</h3>
+    <p>Use the Below link to reset your password.  </p>
+    <a href=${link}>Click the link to reset your password.</a>
+    <p>Regards,</p>
+    <p>URL Shortener Team</p>`)
+    console.log(message);
+
+    Mail(Mailid,response,message)
+    response.send({Msg:'Mail Sent'})
 })
 
 // Forgot Password token verify
@@ -216,7 +237,7 @@ router.route('/userdata')
       .toArray();
 
     const result=await get[0].urls
-  console.log(get[0].urls);
+//   console.log(get[0].urls);
     //   console.log(get);
       if(!result)
       {

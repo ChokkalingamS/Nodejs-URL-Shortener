@@ -1,7 +1,8 @@
 import validUrl from 'valid-url';
-import { findUrl, urlGenereator, createData,updateLog,deleteUrl } from './UrlDB.js';
+import { findUrl,findManyUrl,urlGenereator, createData,updateLog,deleteUrl,updateUrl } from './UrlDB.js';
 import { Base_URL} from './index.js';
 import express from 'express'
+import { ObjectId } from "mongodb";
 
 
 const router=express.Router()
@@ -14,6 +15,7 @@ router.route('/url')
     const date=new Date()
     const createdAt=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
     const lastVisited=createdAt;
+    const lastUpdated=createdAt;
 
     if (!validUrl.isUri(url)) {
         return response.status(400).send({Msg:'Not a Valid URL'});
@@ -46,6 +48,7 @@ router.route('/url')
           shortUrl: Base_URL + randomString,
           createdAt,
           lastVisited,
+          lastUpdated,
           usedCount:0,
         });
 
@@ -97,4 +100,132 @@ router.route('/deleteurl/:id')
     return response.status(502).send({Msg:'Error Occurred'})
 })
 
+// GetURL by id
+router.route('/geturl/:id')
+.get(async(request,response)=>{
+    const {id}=request.params;
+    const check =await findUrl({_id:ObjectId(id)});
+    if(!check)
+    {
+        return response.status(404).send({Msg:'URL Not Found'})
+    }
+    return response.send(check)
+})
+
+// Edit URL
+router.route('/editurl')
+.put(async(request,response)=>{
+    const { _id,customUrl,lastUpdated } = request.body;
+
+    if(customUrl==='')
+    {
+        return response.status(400).send({Msg:'URL Field Should not be empty '});   
+    }
+
+    // if (!validUrl.isUri(url)) {
+    //     return response.status(400).send({Msg:'Not a Valid URL'});
+    // }
+
+    // const userData={
+    //     $or: [{ longUrl: { $eq: url } }, { shortUrl: { $eq: url } }],
+    // }
+
+    const check=await findManyUrl({shortString:customUrl})
+    console.log(check,'Many');
+    if(check.length)
+    {
+        return response.status(400).send({Msg:'Custom URL Already Exists'})
+    }
+
+    // const customUrlcheck=await findUrl({shortString:customUrl})
+    // if(customUrlcheck)
+    // {
+    //     return response.status(400).send({Msg:'Custom URL Already Exists'})
+    // }
+
+    const date=new Date()
+    const updateTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
+
+
+    const update=await updateUrl({_id:ObjectId(_id),shortString:customUrl,shortUrl:Base_URL+customUrl,lastUpdated:updateTime})
+    console.log('update',update);
+    const {modifiedCount}=await update;
+
+    if(!modifiedCount)
+    {
+        return response.status(400).send({Msg:'Error Occurred'})
+    }
+
+    return response.send({Msg:'URL Updated'})
+
+})
+
+
+
+
+
 export const urlRouter=router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// router.route('/editurl')
+// .put(async(request,response)=>{
+//     const { url,_id,customUrl,lastUpdated } = request.body;
+
+//     if(url==='' || customUrl==='')
+//     {
+//         return response.status(400).send({Msg:'URL Field Should not be empty '});   
+//     }
+
+//     if (!validUrl.isUri(url)) {
+//         return response.status(400).send({Msg:'Not a Valid URL'});
+//     }
+
+//     const userData={
+//         $or: [{ longUrl: { $eq: url } }, { shortUrl: { $eq: url } }],
+//     }
+
+//     const check=await findManyUrl(userData)
+//     console.log(check,'Many');
+//     if(check.length>1)
+//     {
+//         return response.status(400).send({Msg:'Already URL Exists'})
+//     }
+
+//     const customUrlcheck=await findUrl({shortString:customUrl})
+//     if(customUrlcheck)
+//     {
+//         return response.status(400).send({Msg:'Custom URL Already Exists'})
+//     }
+
+//     const date=new Date()
+//     const updateTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
+
+
+//     const update=await updateUrl({_id:ObjectId(_id),longUrl:url,shortString:customUrl,shortUrl:Base_URL+customUrl,lastUpdated:updateTime})
+//     console.log('update',update);
+//     const {modifiedCount}=await update;
+
+//     if(!modifiedCount)
+//     {
+//         return response.status(400).send({Msg:'Error Occurred'})
+//     }
+
+//     return response.send({Msg:'URL Updated'})
+
+// })
+
+
+

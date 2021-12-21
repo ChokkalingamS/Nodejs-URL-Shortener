@@ -8,6 +8,16 @@ function createData(urlData) {
 function findUrl(url) {
     return client.db('movielist').collection('Url-Shortener').findOne(url);
 }
+
+function findManyUrl(userData)
+{
+    return client.db('movielist').collection('Url-Shortener').find(userData).toArray();
+}
+
+
+
+
+
 function updateLog(urlData)
 {
     const {longUrl,lastVisited,usedCount}=urlData
@@ -22,4 +32,10 @@ function deleteUrl(id)
 {
     return client.db('movielist').collection('Url-Shortener').deleteOne({_id:ObjectId(id)});
 }
-export{findUrl, urlGenereator, createData,updateLog,deleteUrl}
+
+function updateUrl(userData)
+{
+    const {_id,shortUrl,shortString,lastUpdated}=userData
+    return client.db('movielist').collection('Url-Shortener').updateOne({_id},{$set:{shortUrl,shortString,lastUpdated}})
+}
+export{findUrl,findManyUrl,urlGenereator, createData,updateLog,deleteUrl,updateUrl}

@@ -54,9 +54,9 @@ import { client } from "./index.js";
 
 
 // Mail
-  function Mail(link, Mailid,response)
+  function Mail(Mailid,response,message)
   {
-    var mailStatus;
+   
     const info = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -64,13 +64,15 @@ import { client } from "./index.js";
             pass: process.env.password,
         },
     });
+        console.log(message,'Mailll');
 
     const mailOptions = {
         from: process.env.email,
         to: Mailid,
-        subject: 'Mail From Url Shortener',
-        text:'Two Step Verification',
-        html: `<a href=${link}>Click the link to complete two step verification</a>`,
+        subject: 'Mail From URL Shortener',
+        // text:'Two Step Verification'\,
+        html:message
+        // `<p>Hello</p><a href=${link}>Click the link to complete two step verification</a>`,
     };
 
     info.sendMail(mailOptions, (err, info) => {
