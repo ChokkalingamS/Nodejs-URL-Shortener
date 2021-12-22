@@ -17,7 +17,8 @@ const port=process.env.PORT;
 app.use(cors())
 app.use(express.json())
 app.use('/users',userRouter)
-app.use('/urlmaker',urlRouter)
+app.use('/',urlRouter)
+// app.use('/urlmaker',urlRouter)
 
 
 
@@ -33,10 +34,10 @@ async function createConnection()
 export const client=await createConnection()
 
 // Server
-app.get('/',(request,response)=>{
-    response.send('Url Shortener')
+// app.get('/',(request,response)=>{
+//     response.send('Url Shortener')
     
-})
+// })
 
 app.listen(port,()=>{
     console.log('Server Started at',port);

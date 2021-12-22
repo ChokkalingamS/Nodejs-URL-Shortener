@@ -16,12 +16,12 @@ router.route('/signup')
     
     if(Firstname.length===0||Lastname.length===0||Username.length===0||Mailid.length===0||Password.length===0)
     {
-        return response.status(400).send('Input Field should not be empty')
+        return response.status(400).send({Msg:'Input Field should not be empty'})
     }
 
     if(Password.length<8)
     {
-        return response.status(400).send('Password Must Be Longer')
+        return response.status(400).send({Msg:'Password Must Be Longer'})
     }
    
 
@@ -52,6 +52,7 @@ router.route('/signup')
     // console.log(storeToken);
     // const link=`http://localhost:1000/users/twostepverification/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/twostepverification/${token}`
+
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
     <p>Welcome to the world of URL Shortener</p>
     <p>Using our services you can Simplify your links, customize &amp; manage them at free of cost</p>
@@ -59,7 +60,7 @@ router.route('/signup')
     <p>Two step verification is mandatory to login</p>
     <p>Regards,</p>
     <p>URL Shortener Team</p>`)
-    console.log(message);
+   
 
     const mail=Mail(Mailid,response,message)
     // console.log(mail);
@@ -81,9 +82,8 @@ router.route('/twostepverification/:id')
             const getdata= await getUser({token:id})
             const {_id,Status,token}=await getdata
             const statusChange=await updateUser([{_id:_id},{$set:{Status:'Active'},$unset:{token}}])
-            // console.log(statusChange);
-            // response.send('Account Activated')
-            response.redirect('http://localhost:3000/vermessage')
+            // response.redirect('http://localhost:3000/vermessage')
+            response.redirect('https://url-sh-or-tn-er.herokuapp.com/vermessage')
         }
         
     } catch (error) {
@@ -149,6 +149,7 @@ router.route('/forgotpassword')
     // console.log(update);
     // const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/forgotpassword/verify/${token}`
+    
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
     <p>Use the Below link to reset your password.  </p>
     <a href=${link}>Click the link to reset your password.</a>
@@ -171,7 +172,9 @@ router.route('/forgotpassword/verify/:id')
         return response.status(400).send('Invalid')
     }
 // return response.send('Token Matched')
-return response.redirect(`http://localhost:3000/changepassword/${token}`)
+// return response.redirect(`http://localhost:3000/changepassword/${token}`)
+return response.redirect(`https://url-sh-or-tn-er.herokuapp.com/changepassword/${token}`)
+
 
 })
 

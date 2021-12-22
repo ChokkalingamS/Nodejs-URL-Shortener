@@ -122,13 +122,6 @@ router.route('/editurl')
         return response.status(400).send({Msg:'URL Field Should not be empty '});   
     }
 
-    // if (!validUrl.isUri(url)) {
-    //     return response.status(400).send({Msg:'Not a Valid URL'});
-    // }
-
-    // const userData={
-    //     $or: [{ longUrl: { $eq: url } }, { shortUrl: { $eq: url } }],
-    // }
 
     const check=await findManyUrl({shortString:customUrl})
     console.log(check,'Many');
@@ -136,12 +129,6 @@ router.route('/editurl')
     {
         return response.status(400).send({Msg:'Custom URL Already Exists'})
     }
-
-    // const customUrlcheck=await findUrl({shortString:customUrl})
-    // if(customUrlcheck)
-    // {
-    //     return response.status(400).send({Msg:'Custom URL Already Exists'})
-    // }
 
     const date=new Date()
     const updateTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
