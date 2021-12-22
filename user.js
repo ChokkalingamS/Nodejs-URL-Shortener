@@ -117,10 +117,6 @@ router.route('/login')
     const date=new Date()
     const loginTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
     const loginTimeupdate=await updateUser([{Mailid},{$set:{lastVisited:loginTime,getToken:token}}])
-    
-    //  response.redirect(`http://localhost:3000/users/Dashboard/1`)
-    // response.redirect(`http://localhost:1000/users/Dashboard/${token}`)
-    // response.redirect('https://react-password-reset-flow.herokuapp.com/')
     return response.send({Msg:'Login Successful',token})
 })
 
@@ -151,8 +147,8 @@ router.route('/forgotpassword')
     const token=jwt.sign({id:_id},process.env.key)
     const update=await updateUser([{_id},{$set:{Password:token}}])
     // console.log(update);
-    const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
-
+    // const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
+    const link=`https://url-shor-t-ner.herokuapp.com/users/forgotpassword/verify/${token}`
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
     <p>Use the Below link to reset your password.  </p>
     <a href=${link}>Click the link to reset your password.</a>

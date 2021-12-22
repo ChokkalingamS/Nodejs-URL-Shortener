@@ -46,22 +46,6 @@ app.listen(port,()=>{
 
 
 
-// const userdata=client.db('movielist').collection('users').insertOne({Name:"Selva",password:"chokkz1707"})
-// const userurl=client.db('movielist').collection('url').insertOne({Name:"Selva",url:"localhost"})
-
-async function datas()
-{
-const data=await client.db('movielist').collection('users').aggregate([{$lookup:{from:'url',
-localField:"name",foreignField:"name",as:"urls"}}]).toArray((err,data)=>{
-    console.log(JSON.stringify(data));
-})
-
-
-console.log(data);
-}
-// datas()
-
-
 
 // app.get('/userdata',signupauth,async(request,response)=>{
     
