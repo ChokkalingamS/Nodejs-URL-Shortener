@@ -50,8 +50,8 @@ router.route('/signup')
     const token=jwt.sign({id:_id},process.env.key)
     const storeToken=await updateUser([{_id:_id},{$set:{token:token}}])
     // console.log(storeToken);
-    const link=`http://localhost:1000/users/twostepverification/${token}`
-
+    // const link=`http://localhost:1000/users/twostepverification/${token}`
+    const link=`https://url-shor-t-ner.herokuapp.com/users/twostepverification/${token}`
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
     <p>Welcome to the world of URL Shortener</p>
     <p>Using our services you can Simplify your links, customize &amp; manage them at free of cost</p>
