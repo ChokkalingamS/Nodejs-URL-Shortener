@@ -192,7 +192,7 @@ router.route('/changepassword')
     const check=await getUser({Password:token})
     if(!check)
     {
-        return response.status(400).send('Invalid Token')
+        return response.status(400).send({Msg:'Link Expired'})
     }
     const {Mailid}=await check
     const hashedPassword= await passwordGenerator(Password)
