@@ -34,9 +34,8 @@ export const client=await createConnection()
 
 // Server
 app.get('/',(request,response)=>{
-    // response.send('Url Shortener')
-    // response.redirect('https://react-password-reset-flow.herokuapp.com/')
-    response.redirect(`http://localhost:3000/users/Dashboard/123`)
+    response.send('Url Shortener')
+    
 })
 
 app.listen(port,()=>{
