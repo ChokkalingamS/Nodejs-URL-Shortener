@@ -1,0 +1,124 @@
+URL 
+'/url' - Creating short url
+when the user sends the request with or without custom url,the long url & MailId.
+1.It checks the long url is valid or not
+2.It checks the long url is already shortened (already used)
+3.if the long url is not present in the data base already,then it checks whether the custom url is present or not 
+if present it will be used as the random string 
+if the custom url is not present then urlGenerator() will generate the random string  
+4.then the object with longurl,shorturl,shortstring,lastvisited,createdat will be created
+5.If the long url is already present in the database,it returns the already shortened url
+
+
+'/:url' - Redirect
+1.When the user uses the short url,the server will take the random string using request.params
+2.then it checks the database whether the shortstring is present or not
+3.If present the url will redirected to the long url
+4.if not the response will be 404 Not Found
+
+'/deleteurl/:id'
+1.from the url the ObjectId is taken using request.params
+2.If the url is deleted the response will be URL Deleted
+3.If not the response will be URL Not Found
+
+'/geturl/:id'
+1.1.from the url the ObjectId is taken using request.params
+2.if the ObjectId is present in db the data will be sent as response
+3.if not the response will be URL Not found
+
+
+'/editurl' -Edit URL by id
+1.From the body the ObjectId,customUrl,lastUpdated is taken
+2.It checks whether the custom url is already present in the db or not
+3.if already present the response msg will be URL Already Present 
+4.If not the custom url & lastUpdated time will be updated in the db
+5.If modified count is true the response will be url updated
+6.else the response will be error Occurred
+
+
+'/signup' - SignUp
+1.From the client side the data such as Firstname,Lastname,Username,Mailid,Password
+will be sent as the request
+2.If any of the fields are empty the response will be Input Field should not be empty
+3.If the password length is less than 8  the response will be Password Must Be Longer
+4.From the request body the Mailid,username is taken 
+5.If the Mailid Or username already exist the response will be Username or Mailid Already exists
+6.The password will be hashed
+7.Then the current date & time, userdata with status:Inactive will be created in the database 
+8.Using JWT with the help of key & ObjectId the token is generated
+9.The token will also stored in DB
+10.The mail will be sent to the user with the link & token which redirects to the server
+
+'/twostepverification/:id' - Two Step verification
+1.The id will be the token
+2.the token is then verified using JWT 
+3.If the token is matched the status will be updated as Active and the token will be deleted
+4.If not the response will be Link Expired
+
+'/login' - login
+1.From the request the Mailid and password is taken
+2.The the mailid is verified,if it is already present in the db or not
+3.if not the response will be Invalid login Credentials
+4.then it checks the status is active or not
+5.If not the response will be Account is Inactive
+6.it checks the password 
+7.if there is no match the response will be Invalid login Credentials
+8.The login time will be updated in the db
+9.Then the token will be generated with Key & ObjectId with the help of JWT
+10.Then the response will be with a msg : login successful & the token to access the data
+
+'/forgotpassword' Forgot Password
+1.From the body the mailid is taken
+2.then the mailid is verified
+3.if the mailid is not present in the db the response will be email does not exist
+4.if the status is inactive then the response will be Account is inactive
+5.Then the temporary token will be generated and then updated as the old password
+6.Then the link which redirects to the server  will be sent to the user via mail
+7.The response will be Mail sent for verification
+
+'/forgotpassword/verify/:id'
+1.By getting the id from the url using request.params
+2.the id which is the token will be checked with the password
+3.If there is match then it will redirect to the change password page with token
+4.else the response will be Link Expired
+
+'/changepassword'
+1.From client the token & password is sent in the request body
+2.if the password length is less than 8 the response will be password must be longer
+3.It checks the token with the old password
+4.If not matches the response will be Link expired 
+4. if match the new password will be hashed and then update the old password
+5.The response will be Password Changed Successfully
+
+'/getdata'
+1.The token will be sent as header from client side
+2.then the token is verified 
+3.if the token is matched the user data will be sent as response
+4.If not the response will be 404 Not Found
+
+'/userdata'
+1.Using JWT- Signup auth middleware the token in the header is verified
+2.If not matched the error msg will be sent
+3.Then the token is verified in the db 
+4.using the token the user data is taken from user collection
+5.Using Mailid the url collection & user collection is combined
+6.Then url is taken from the particular user
+7.It is sent as response
+8.if not found the response will be 404 Error found
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

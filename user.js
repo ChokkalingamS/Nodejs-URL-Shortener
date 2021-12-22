@@ -29,7 +29,6 @@ router.route('/signup')
         $or: [{ Username: { $eq: Username } }, { Mailid: { $eq: Mailid } }],
     }
 
-    // console.log(request.body);
     const check = await getUser(userData);
     console.log(check);
     if(check)
@@ -49,7 +48,6 @@ router.route('/signup')
     const {_id}=await getdata;
     const token=jwt.sign({id:_id},process.env.key)
     const storeToken=await updateUser([{_id:_id},{$set:{token:token}}])
-    // console.log(storeToken);
     // const link=`http://localhost:1000/users/twostepverification/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/twostepverification/${token}`
 
@@ -61,14 +59,7 @@ router.route('/signup')
     <p>Regards,</p>
     <p>URL Shortener Team</p>`)
    
-
-    const mail=Mail(Mailid,response,message)
-    // console.log(mail);
-    // if(!mail)
-    // {
-    //    return  response.status(400).send('Unknown error Occurred')
-    // }
-    // return response.send('Mail Sent For verification')
+    const mail=Mail(Mailid,response,message) 
 })
 
 
@@ -87,7 +78,7 @@ router.route('/twostepverification/:id')
         }
         
     } catch (error) {
-        response.status(400).send('')  
+        response.status(400).send('Link Expired')  
     }
     
 })
@@ -120,16 +111,6 @@ router.route('/login')
     return response.send({Msg:'Login Successful',token})
 })
 
-
-// router.route('/Dashboard/:id')
-// .get(async(request,response)=>{
-//     const {id:token}=request.params
-//     console.log(token);
-//      response.redirect(`http://localhost:3000/users/Dashboard/${token}`)
-// })
-
-
-
 // Forgot Password
 router.route('/forgotpassword')
 .post(async(request,response)=>{
@@ -146,7 +127,6 @@ router.route('/forgotpassword')
     }
     const token=jwt.sign({id:_id},process.env.key)
     const update=await updateUser([{_id},{$set:{Password:token}}])
-    // console.log(update);
     // const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/forgotpassword/verify/${token}`
     
@@ -155,10 +135,7 @@ router.route('/forgotpassword')
     <a href=${link}>Click the link to reset your password.</a>
     <p>Regards,</p>
     <p>URL Shortener Team</p>`)
-    console.log(message);
-
     Mail(Mailid,response,message)
-    response.send({Msg:'Mail Sent'})
 })
 
 // Forgot Password token verify
@@ -169,9 +146,8 @@ router.route('/forgotpassword/verify/:id')
     const check=await getUser({Password:token})
     if(!check)
     {
-        return response.status(400).send('Invalid')
+        return response.status(400).send('Link Expired')
     }
-// return response.send('Token Matched')
 // return response.redirect(`http://localhost:3000/changepassword/${token}`)
 return response.redirect(`https://url-sh-or-tn-er.herokuapp.com/changepassword/${token}`)
 
@@ -197,7 +173,7 @@ router.route('/changepassword')
     const {Mailid}=await check
     const hashedPassword= await passwordGenerator(Password)
     const passwordChange=await updateUser([{Mailid},{$set:{Password:hashedPassword}}])
-    response.send('Password Changed Sucessfully')
+    response.send('Password Changed Successfully')
 })
 
 
@@ -205,8 +181,11 @@ router.route('/getdata')
 .get(async(request,response)=>{
     const token =request.header('x-auth-token')
     const check= await getUser({getToken:token})
-    console.log(check);
-    response.send(check)
+    if(!check)
+    {
+        return response.status(404).send('Not Found')
+    }
+    return response.send(check)
 })
 
 
@@ -217,7 +196,6 @@ router.route('/userdata')
     const token =request.header('x-auth-token')
     const getdata= await getUser({getToken:token})
     const {Mailid}=await getdata
-    // console.log(Mailid);
     const get = await client
       .db("movielist")
       .collection("users")
@@ -236,8 +214,6 @@ router.route('/userdata')
       .toArray();
 
     const result=await get[0].urls
-//   console.log(get[0].urls);
-    //   console.log(get);
       if(!result)
       {
           response.status(404).send('Not Found')
@@ -245,19 +221,5 @@ router.route('/userdata')
     response.send(result)
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export const userRouter=router;
 

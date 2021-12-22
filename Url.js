@@ -1,10 +1,10 @@
 import validUrl from 'valid-url';
-import { findUrl,findManyUrl,urlGenereator, createData,updateLog,deleteUrl,updateUrl } from './UrlDB.js';
-import { Base_URL} from './index.js';
 import express from 'express'
 import { ObjectId } from "mongodb";
+import { findUrl,findManyUrl,urlGenereator, createData,updateLog,deleteUrl,updateUrl } from './UrlDB.js';
+import { Base_URL} from './index.js';
 
-
+// Router
 const router=express.Router()
 
 // Creating URL
@@ -89,8 +89,6 @@ router.route('/:url')
 router.route('/deleteurl/:id')
 .delete(async(request,response)=>{
     const {id}=request.params;
-    console.log(id);
-    console.log(request.params);
     const delUrl = await deleteUrl(id);
     const {deletedCount}= await delUrl
     if(deletedCount)
@@ -124,7 +122,6 @@ router.route('/editurl')
 
 
     const check=await findManyUrl({shortString:customUrl})
-    console.log(check,'Many');
     if(check.length)
     {
         return response.status(400).send({Msg:'Custom URL Already Exists'})
@@ -135,7 +132,6 @@ router.route('/editurl')
 
 
     const update=await updateUrl({_id:ObjectId(_id),shortString:customUrl,shortUrl:Base_URL+customUrl,lastUpdated:updateTime})
-    console.log('update',update);
     const {modifiedCount}=await update;
 
     if(!modifiedCount)
@@ -146,9 +142,6 @@ router.route('/editurl')
     return response.send({Msg:'URL Updated'})
 
 })
-
-
-
 
 
 export const urlRouter=router;
@@ -167,52 +160,6 @@ export const urlRouter=router;
 
 
 
-// router.route('/editurl')
-// .put(async(request,response)=>{
-//     const { url,_id,customUrl,lastUpdated } = request.body;
-
-//     if(url==='' || customUrl==='')
-//     {
-//         return response.status(400).send({Msg:'URL Field Should not be empty '});   
-//     }
-
-//     if (!validUrl.isUri(url)) {
-//         return response.status(400).send({Msg:'Not a Valid URL'});
-//     }
-
-//     const userData={
-//         $or: [{ longUrl: { $eq: url } }, { shortUrl: { $eq: url } }],
-//     }
-
-//     const check=await findManyUrl(userData)
-//     console.log(check,'Many');
-//     if(check.length>1)
-//     {
-//         return response.status(400).send({Msg:'Already URL Exists'})
-//     }
-
-//     const customUrlcheck=await findUrl({shortString:customUrl})
-//     if(customUrlcheck)
-//     {
-//         return response.status(400).send({Msg:'Custom URL Already Exists'})
-//     }
-
-//     const date=new Date()
-//     const updateTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
-
-
-//     const update=await updateUrl({_id:ObjectId(_id),longUrl:url,shortString:customUrl,shortUrl:Base_URL+customUrl,lastUpdated:updateTime})
-//     console.log('update',update);
-//     const {modifiedCount}=await update;
-
-//     if(!modifiedCount)
-//     {
-//         return response.status(400).send({Msg:'Error Occurred'})
-//     }
-
-//     return response.send({Msg:'URL Updated'})
-
-// })
 
 
 

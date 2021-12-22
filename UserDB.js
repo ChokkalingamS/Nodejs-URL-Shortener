@@ -21,26 +21,12 @@ import { client } from "./index.js";
         });
 }
 
-
  function updateUser(userData) {
     return client.db('movielist').collection('users').updateOne(userData[0], userData[1]);
 }
  function getUser(userData) {
     return client.db("movielist").collection("users").findOne(userData);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Password Generator
  async function passwordGenerator(Password) {
@@ -49,9 +35,6 @@ import { client } from "./index.js";
     const hashedPassword = await bcrypt.hash(Password, salt);
     return hashedPassword;
 }
-
-
-
 
 // Mail
   function Mail(Mailid,response,message)
@@ -64,17 +47,12 @@ import { client } from "./index.js";
             pass: process.env.password,
         },
     });
-        console.log(message,'Mailll');
-
     const mailOptions = {
         from: process.env.email,
         to: Mailid,
         subject: 'Mail From URL Shortener',
-        // text:'Two Step Verification'\,
-        html:message
-        // `<p>Hello</p><a href=${link}>Click the link to complete two step verification</a>`,
+        html:message 
     };
-
     info.sendMail(mailOptions, (err, info) => {
         if (err) {
             console.log('Mail', err);
@@ -85,15 +63,6 @@ import { client } from "./index.js";
         }
     });
 }
-
-
-
-
-
-
-
-
-
 
 export { getUser, passwordGenerator, updateUser, Mail, createUser };
 

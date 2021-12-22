@@ -3,9 +3,8 @@ import dotenv from 'dotenv'
 import {MongoClient} from 'mongodb'
 import {userRouter} from './user.js'
 import {urlRouter} from './Url.js'
-import {signupauth} from "./Token.js";
 import cors from 'cors'
-import { getUser, passwordGenerator, updateUser, Mail,createUser } from './UserDB.js';
+
 
 export const app=express()
 dotenv.config()
@@ -18,10 +17,6 @@ app.use(cors())
 app.use(express.json())
 app.use('/users',userRouter)
 app.use('/',urlRouter)
-// app.use('/urlmaker',urlRouter)
-
-
-
 
 // MongoDB Connection
 async function createConnection()
@@ -33,11 +28,6 @@ async function createConnection()
 }
 export const client=await createConnection()
 
-// Server
-// app.get('/',(request,response)=>{
-//     response.send('Url Shortener')
-    
-// })
 
 app.listen(port,()=>{
     console.log('Server Started at',port);
@@ -45,42 +35,6 @@ app.listen(port,()=>{
 
 
 
-
-
-
-// app.get('/userdata',signupauth,async(request,response)=>{
-    
-//     const token =request.header('x-auth-token')
-//     const getdata= await getUser({getToken:token})
-//     const {Mailid}=await getdata
-//     // console.log(Mailid);
-//     const get = await client
-//       .db("movielist")
-//       .collection("users")
-//       .aggregate([
-//         {
-//           $lookup: {
-//             from: "Url-Shortener",
-//             localField: "Mailid",
-//             foreignField: "Mailid",
-//             as: "urls",
-//           },
-//         },
-//         { $match: { "Mailid": Mailid } },
-//         // { $limit: 1 },
-//       ])
-//       .toArray();
-
-//     const result=await get[0].urls
-// //   console.log(get[0].urls);
-//       console.log(get);
-//       if(!result)
-//       {
-//           response.status(404).send('Not Found')
-//       }
-//     response.send(result)
-
-// })
 
 
 
