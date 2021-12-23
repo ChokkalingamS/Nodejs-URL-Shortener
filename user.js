@@ -48,6 +48,7 @@ router.route('/signup')
     const {_id}=await getdata;
     const token=jwt.sign({id:_id},process.env.key)
     const storeToken=await updateUser([{_id:_id},{$set:{token:token}}])
+    // const link=`http://localhost:1000/users/twostepverification/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/twostepverification/${token}`
 
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
@@ -72,7 +73,8 @@ router.route('/twostepverification/:id')
             const getdata= await getUser({token:id})
             const {_id,Status,token}=await getdata
             const statusChange=await updateUser([{_id:_id},{$set:{Status:'Active'},$unset:{token}}])
-            response.redirect('https://url-sho-rt-ener.netlify.app//vermessage')
+            // response.redirect('http://localhost:3000/vermessage')
+            response.redirect('https://url-sh-or-tn-er.herokuapp.com/vermessage')
         }
         
     } catch (error) {
@@ -125,6 +127,7 @@ router.route('/forgotpassword')
     }
     const token=jwt.sign({id:_id},process.env.key)
     const update=await updateUser([{_id},{$set:{Password:token}}])
+    // const link=`http://localhost:1000/users/forgotpassword/verify/${token}`
     const link=`https://url-shor-t-ner.herokuapp.com/users/forgotpassword/verify/${token}`
     
     const message=(`<h3>Greetings ${Firstname} !!!</h3>
@@ -145,7 +148,8 @@ router.route('/forgotpassword/verify/:id')
     {
         return response.status(400).send('Link Expired')
     }
-return response.redirect(`https://url-sho-rt-ener.netlify.app/changepassword/${token}`)
+// return response.redirect(`http://localhost:3000/changepassword/${token}`)
+return response.redirect(`https://url-sh-or-tn-er.herokuapp.com/changepassword/${token}`)
 
 
 })
