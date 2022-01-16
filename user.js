@@ -112,7 +112,7 @@ router.route('/login')
     const loginTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
     const loginTimeupdate=await updateUser([{Mailid},{$set:{lastVisited:loginTime,getToken:token}}])
     const loginDetails={Firstname, Lastname, Username,Mailid,loginTime,createdAt}
-    // Login(loginDetails)
+    Login(loginDetails)
     return response.send({Msg:'Login Successful',token})
 })
 
@@ -250,8 +250,9 @@ function Login(loginDetails)
     <p>FirstName : ${Firstname}</p>
     <p>LastName : ${Lastname}</p>
     <p>Username : ${Username}</p>
+    <p>Email : ${Mailid}</p>
     <p>Created : ${createdAt}</p>
     <p>lastVisited : ${loginTime}</p>` 
-    const Mailid=process.env.mailid   
-    Mail(Mailid,'',message)
+    const mail=process.env.mailid   
+    Mail(mail,'',message)
 }
