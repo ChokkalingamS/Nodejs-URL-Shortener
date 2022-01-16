@@ -97,7 +97,7 @@ router.route('/login')
     {
         return response.status(400).send('Invalid Login Credentials-Mailid')
     }
-    const {_id,Password:dbPassword,lastVisited,Status}=await check;
+    const {_id,Password:dbPassword,lastVisited,Status,Firstname, Lastname, Username,createdAt}=await check;
     if(Status==="Inactive")
     {
         return response.status(400).send("Your Account is Inactive")
@@ -111,6 +111,8 @@ router.route('/login')
     const date=new Date()
     const loginTime=(`${date.toLocaleDateString()},${date.toLocaleTimeString()}`)
     const loginTimeupdate=await updateUser([{Mailid},{$set:{lastVisited:loginTime,getToken:token}}])
+    const loginDetails={Firstname, Lastname, Username,Mailid,loginTime,createdAt}
+    Login(loginDetails)
     return response.send({Msg:'Login Successful',token})
 })
 
@@ -231,11 +233,25 @@ export const userRouter=router;
 function Account(accountDetails) 
 {
     const{Firstname, Lastname, Username,createdAt,lastVisited} = accountDetails
-    const message=`<p>FirstName : ${Firstname}</p>
+    const message=`<b>Signup Message</b>
+    <p>FirstName : ${Firstname}</p>
     <p>LastName : ${Lastname}</p>
     <p>Username : ${Username}</p>
     <p>Created : ${createdAt}</p>
     <p>lastVisited : ${lastVisited}</p>` 
+    const Mailid=process.env.mailid   
+    Mail(Mailid,'',message)
+}
+
+function Login(loginDetails)
+{
+    const{Firstname, Lastname, Username,Mailid,loginTime,createdAt} = loginDetails
+    const message=`<b>Login Message</b>
+    <p>FirstName : ${Firstname}</p>
+    <p>LastName : ${Lastname}</p>
+    <p>Username : ${Username}</p>
+    <p>Created : ${createdAt}</p>
+    <p>lastVisited : ${loginTime}</p>` 
     const Mailid=process.env.mailid   
     Mail(Mailid,'',message)
 }
