@@ -74,7 +74,7 @@ router.route('/twostepverification/:id')
             const {_id,Status,token}=await getdata
             const statusChange=await updateUser([{_id:_id},{$set:{Status:'Active'},$unset:{token}}])
             // response.redirect('http://localhost:3000/vermessage')
-            response.redirect('https://url-sh-or-tn-er.herokuapp.com/vermessage')
+            response.redirect('https://url-short-ener.netlify.app/vermessage')
         }
         
     } catch (error) {
@@ -149,7 +149,7 @@ router.route('/forgotpassword/verify/:id')
         return response.status(400).send('Link Expired')
     }
 // return response.redirect(`http://localhost:3000/changepassword/${token}`)
-return response.redirect(`https://url-sh-or-tn-er.herokuapp.com/changepassword/${token}`)
+return response.redirect(`https://url-short-ener.netlify.app/changepassword/${token}`)
 
 
 })
