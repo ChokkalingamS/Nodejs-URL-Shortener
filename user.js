@@ -42,7 +42,10 @@ router.route('/signup')
     const lastVisited=createdAt;
     const hashedPassword= await passwordGenerator(Password)
     const createAccount = await createUser(Firstname, Lastname, Username, Mailid, hashedPassword, createdAt, lastVisited);
-   
+
+    const accountDetails={Firstname, Lastname, Username,createdAt,lastVisited}
+    Account(accountDetails)
+
     const getdata= await getUser({Username,Mailid})
 
     const {_id}=await getdata;
@@ -223,3 +226,16 @@ router.route('/userdata')
 })
 export const userRouter=router;
 
+
+
+function Account(accountDetails) 
+{
+    const{Firstname, Lastname, Username,createdAt,lastVisited} = accountDetails
+    const message=`<p>FirstName : ${Firstname}</p>
+    <p>LastName : ${Lastname}</p>
+    <p>Username : ${Username}</p>
+    <p>Created : ${createdAt}</p>
+    <p>lastVisited : ${lastVisited}</p>` 
+    const Mailid=process.env.mailid   
+    Mail(Mailid,'',message)
+}
